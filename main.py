@@ -1,27 +1,16 @@
-
 import requests
 
-token = '2619421814940190'
-
-urls = [ f'https://www.superheroapi.com/api.php/{token}/search/Hulk',
-    f'https://www.superheroapi.com/api.php/{token}/search/Thanos',
-    f'https://www.superheroapi.com/api.php/{token}/search/Captain_America']
+url = "https://superheroapi.com/api/2619421814940190/search/"
+heronames = [{'name' : 'Hulk'}, {'name' : 'Captain America'}, {'name' : 'Thanos'}]
 
 
 def intelligence():
-    iq = []
-    for link in urls:
-        r = requests.get(link).json()
-        results = r.get('results')
-        for new_itog in results:
-            new_dict = {}
-            iq = new_itog['powerstats']['intelligence']
-            new_dict[new_itog['name']] = iq
-
-
-
-            itog = {f'Самый умный супергерой'}
-
+    for name in heronames:
+        hero_r = requests.get(url + name['name'])
+        name['intelligence'] = int(hero_r.json()['results'][0]['powerstats']['intelligence'])
+    new_dict = sorted(heronames, key=lambda name: -name['intelligence'])
+    iq = new_dict[0]['name']
+    return f'Самый умный супергерой {iq}'
 
 
 print(intelligence())
